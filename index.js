@@ -12,6 +12,10 @@ if (process.env.NODE_ENV !== "production") {
 // Connect to Mongo Database
 connectDB();
 
+// Body parser
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // Route Files
 const bootcamps = require("./routes/bootcamps");
 
