@@ -1,8 +1,16 @@
-if (process.env.NODE_ENV !== "production")
-    require("dotenv").config();
-
 const express = require("express");
+const morgan = require("morgan");
+const connectDB = require("./db");
 const app = express();
+
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+    // Dev Logging Middleware
+    app.use(morgan("dev"));
+}
+
+// Connect to Mongo Database
+connectDB();
 
 // Route Files
 const bootcamps = require("./routes/bootcamps");

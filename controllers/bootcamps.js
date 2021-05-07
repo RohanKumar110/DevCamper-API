@@ -9,7 +9,7 @@ module.exports.getBootcamps = (req, res, next) => {
 // @route       POST /api/v1/bootcamps
 // @access    PRIVATE
 module.exports.createBootcamp = (req, res, next) => {
-    res.status(200).json({ success: true, msg: "Create new Bootcamps" });
+    res.status(200).json({ success: true, msg: "Create new Bootcamp" });
 }
 
 // @desc        Get Single bootcamp
@@ -17,7 +17,7 @@ module.exports.createBootcamp = (req, res, next) => {
 // @access    PUBLIC   
 module.exports.getBootcamp = (req, res, next) => {
     const { id } = req.params;
-    res.status(200).json({ success: true, msg: `Show bootcamp ${id}` });
+    res.status(200).json({ success: true, msg: `Show Bootcamp ${id}` });
 }
 
 // @desc        Update Single bootcamp
@@ -25,7 +25,7 @@ module.exports.getBootcamp = (req, res, next) => {
 // @access    PRIVATE
 module.exports.updateBootcamp = (req, res, next) => {
     const { id } = req.params;
-    res.status(200).json({ success: true, msg: `Update bootcamp ${id}` });
+    res.status(200).json({ success: true, msg: `Update Bootcamp ${id}` });
 }
 
 // @desc        Delete Single bootcamp
@@ -33,5 +33,5 @@ module.exports.updateBootcamp = (req, res, next) => {
 // @access    PRIVATE 
 module.exports.deleteBootcamp = (req, res, next) => {
     const { id } = req.params;
-    res.status(200).json({ success: true, msg: `Delete bootcamp ${id}` });
+    res.status(200).json({ success: true, msg: `Delete Bootcamp ${id}` });
 }
