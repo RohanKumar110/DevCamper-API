@@ -1,6 +1,8 @@
+require("colors");
 const express = require("express");
 const morgan = require("morgan");
 const connectDB = require("./db");
+const errorHandler = require("./middlewares/error");
 const app = express();
 
 if (process.env.NODE_ENV !== "production") {
@@ -21,6 +23,9 @@ const bootcamps = require("./routes/bootcamps");
 
 // Restful Routes
 app.use("/api/v1/bootcamps", bootcamps)
+//Error Middleware
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, console.log(`Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`));
+app.listen(PORT,
+    console.log(`Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold));
