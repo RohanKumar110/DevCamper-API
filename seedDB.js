@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 // Load Models
 const Bootcamp = require('./models/bootcamp');
+const Course = require('./models/course');
 
 //Connect to DB
 const dbUrl = process.env.DB_URL;
@@ -17,11 +18,13 @@ mongoose.connect(dbUrl, {
 
 // Read JSON files
 const bootcamps = JSON.parse(fs.readFileSync(`${__dirname}/_data/bootcamps.json`, "utf-8"));
+const courses = JSON.parse(fs.readFileSync(`${__dirname}/_data/courses.json`, "utf-8"));
 
 // Import into DB
 const importData = async () => {
     try {
         await Bootcamp.create(bootcamps);
+        await Course.create(courses);
         console.log("Data Imported".green.inverse);
         process.exit();
     } catch (error) {
@@ -32,6 +35,7 @@ const importData = async () => {
 // Import into DB
 const deleteData = async () => {
     try {
+        await Course.deleteMany({});
         await Bootcamp.deleteMany({});
         console.log("Data Destroyed".red.inverse);
         process.exit();

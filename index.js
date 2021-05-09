@@ -20,9 +20,11 @@ app.use(express.json());
 
 // Route Files
 const bootcamps = require("./routes/bootcamps");
+const courses = require("./routes/courses");
 
 // Restful Routes
-app.use("/api/v1/bootcamps", bootcamps)
+app.use("/api/v1/bootcamps", bootcamps);
+app.use("/api/v1/courses", courses);
 //Error Middleware
 app.use(errorHandler);
 
