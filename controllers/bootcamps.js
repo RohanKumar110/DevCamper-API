@@ -8,11 +8,33 @@ const ExpressError = require("../utils/ExpressError");
 // @access    PUBLIC    
 module.exports.getBootcamps = catchAsync(async (req, res, next) => {
 
-    let queryStr = JSON.stringify(req.query);
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
-    const query = JSON.parse(queryStr);
+    // Copy req.query
+    const reqQuery = { ...req.query };
 
-    const bootcamps = await Bootcamp.find(query);
+    // Fields to exclude
+    const removeFields = ["select"];
+
+    // Loop over removeFields and delete them from reqQuery
+    removeFields.forEach(param => delete reqQuery[param]);
+
+    // Create query string
+    let queryStr = JSON.stringify(reqQuery);
+
+    // Create operators ($gt,$lt,etc) 
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
+    // Finding query
+    let query = Bootcamp.find(JSON.parse(queryStr));
+
+    // Select FIELDS
+    if (req.query.select) {
+        const fields = req.query.select.replace(",", " ");
+        query = query.select(fields);
+    }
+ 
+    // Executing query
+    const bootcamps = await query;
+
     res.status(200).json({ success: true, count: bootcamps.length, data: bootcamps });
 });
 
