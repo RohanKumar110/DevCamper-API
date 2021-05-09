@@ -12,7 +12,7 @@ module.exports.getBootcamps = catchAsync(async (req, res, next) => {
     const reqQuery = { ...req.query };
 
     // Fields to exclude
-    const removeFields = ["select"];
+    const removeFields = ["select", "sort"];
 
     // Loop over removeFields and delete them from reqQuery
     removeFields.forEach(param => delete reqQuery[param]);
@@ -31,7 +31,15 @@ module.exports.getBootcamps = catchAsync(async (req, res, next) => {
         const fields = req.query.select.replace(",", " ");
         query = query.select(fields);
     }
- 
+
+    //Sort 
+    if (req.query.sort) {
+        const sortBy = req.query.sort.replace(",", " ");
+        query = query.sort(sortBy);
+    } else {
+        query = query.sort("-createdAt");
+    }
+
     // Executing query
     const bootcamps = await query;
 
