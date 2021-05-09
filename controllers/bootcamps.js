@@ -24,7 +24,7 @@ module.exports.getBootcamps = catchAsync(async (req, res, next) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
     // Finding query
-    let query = Bootcamp.find(JSON.parse(queryStr));
+    let query = Bootcamp.find(JSON.parse(queryStr)).populate("courses");
 
     // Select FIELDS
     if (req.query.select) {
