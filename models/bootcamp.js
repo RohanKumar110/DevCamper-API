@@ -137,8 +137,8 @@ bootcampSchema.post("findOneAndDelete", async function (bootcamp) {
 
 // Reverse populate with virtuals
 bootcampSchema.virtual("courses", {
-    ref: "Course",
-    localField: "_id",
+    ref: "Course", // The model to use
+    localField: "_id", 
     foreignField: "bootcamp",
     justOne: false
 })

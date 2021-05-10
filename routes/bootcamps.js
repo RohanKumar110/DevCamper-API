@@ -17,6 +17,9 @@ router.route("/:id")
     .put(bootcamps.updateBootcamp)
     .delete(bootcamps.deleteBootcamp);
 
+router.route("/:id/photo")
+    .put(bootcamps.uploadBootcampPhoto);
+
 router.route("/radius/:zipcode/:distance")
     .get(bootcamps.getBootcampsInRadius);
 

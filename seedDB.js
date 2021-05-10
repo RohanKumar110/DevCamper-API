@@ -3,6 +3,7 @@ require('colors');
 const fs = require('fs');
 const mongoose = require('mongoose');
 
+
 // Load Models
 const Bootcamp = require('./models/bootcamp');
 const Course = require('./models/course');
