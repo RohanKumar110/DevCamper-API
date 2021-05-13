@@ -9,4 +9,12 @@ router.post("/login", auth.login);
 
 router.get("/me", protectRoute, auth.getCurrentUser);
 
+router.get("/forgotpassword", auth.forgotPassword);
+
+router.put("/resetpassword/:resetToken", auth.resetPassword);
+
+router.put("/updatedetails", protectRoute, auth.updateDetails);
+
+router.put("/updatepassword", protectRoute, auth.updatePassword);
+
 module.exports = router;
