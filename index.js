@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const connectDB = require("./db");
 const errorHandler = require("./middlewares/error");
 const fileupload = require("express-fileupload");
+const cookieParser = require('cookie-parser')
 const app = express();
 
 if (process.env.NODE_ENV !== "production") {
@@ -20,12 +21,16 @@ connectDB();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//Cookie parser
+app.use(cookieParser());
+
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Route Files
 const bootcamps = require("./routes/bootcamps");
 const courses = require("./routes/courses");
+const auth = require("./routes/auth");
 
 // File uploading
 app.use(fileupload());
@@ -33,6 +38,8 @@ app.use(fileupload());
 // Mount Routers
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
+app.use("/api/v1/auth", auth);
+
 //Error Middleware
 app.use(errorHandler);
 

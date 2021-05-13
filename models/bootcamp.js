@@ -101,6 +101,11 @@ const bootcampSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    }
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
@@ -138,7 +143,7 @@ bootcampSchema.post("findOneAndDelete", async function (bootcamp) {
 // Reverse populate with virtuals
 bootcampSchema.virtual("courses", {
     ref: "Course", // The model to use
-    localField: "_id", 
+    localField: "_id",
     foreignField: "bootcamp",
     justOne: false
 })

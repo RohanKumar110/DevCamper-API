@@ -13,10 +13,20 @@ module.exports.getBootcamps = catchAsync(async (req, res, next) => {
 });
 
 // @desc        Create new bootcamp
-// @route       POST /api/v1/bootcamps
+// @route        POST /api/v1/bootcamps
 // @access    PRIVATE
 module.exports.createBootcamp = catchAsync(async (req, res, next) => {
+
+    const { id } = req.user;
+    // Check for published bootcamp
+    const publishedBootcamp = await Bootcamp.findOne({ user: id });
+    // If user is not an admin, they can only add one bootcamp
+    if (publishedBootcamp && req.user.role !== "admin") {
+        return next(
+            new ExpressError(400, `The user with ID ${id} has already published a bootcamp`));
+    }
     const bootcamp = new Bootcamp(req.body);
+    bootcamp.user = id;
     const newBootcamp = await bootcamp.save();
     res.status(201).json({ success: true, data: newBootcamp });
 });
@@ -38,13 +48,21 @@ module.exports.getBootcamp = catchAsync(async (req, res, next) => {
 // @access    PRIVATE
 module.exports.updateBootcamp = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const updatedBootcamp = await Bootcamp.findByIdAndUpdate(id, req.body, {
-        new: true,
-        runValidators: true
-    });
-    if (!updatedBootcamp) {
+    const foundBootcamp = await Bootcamp.findById(id);
+    if (!foundBootcamp) {
         return next(new ExpressError(404, `Bootcamp not found with id of ${id}`));
     }
+    // Make sure user is bootcamp owner and also not an admin
+    if (foundBootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+        return next(
+            new ExpressError(401, `User ${id} is not authorized to update this bootcamp`)
+        )
+    }
+    const updatedBootcamp = await Bootcamp.findByIdAndUpdate(id, req.body, {
+        runValidators: true,
+        new: true
+    });
+
     res.status(200).json({ success: true, data: updatedBootcamp });
 });
 
@@ -53,10 +71,18 @@ module.exports.updateBootcamp = catchAsync(async (req, res, next) => {
 // @access    PRIVATE 
 module.exports.deleteBootcamp = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const deletedBootcamp = await Bootcamp.findByIdAndDelete(id);
-    if (!deletedBootcamp) {
+    const foundBootcamp = await Bootcamp.findById(id);
+    if (!foundBootcamp) {
         return next(new ExpressError(404, `Bootcamp not found with id of ${id}`));
     }
+    // Make sure user is bootcamp owner and also not an admin
+    if (foundBootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+        return next(
+            new ExpressError(401, `User ${id} is not authorized to delete this bootcamp`)
+        );
+    }
+
+    await Bootcamp.findByIdAndDelete(id);
     res.status(200).json({ success: true, data: {} });
 });
 

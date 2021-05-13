@@ -12,7 +12,7 @@ const courseSchema = new Schema({
         required: [true, "Please add a description"]
     },
     weeks: {
-        type: String,
+        type: Number,
         required: [true, "Please add number of weeks"]
     },
     tuition: {
@@ -35,6 +35,11 @@ const courseSchema = new Schema({
     bootcamp: {
         type: Schema.Types.ObjectId,
         ref: "Bootcamp",
+        required: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true
     }
 });

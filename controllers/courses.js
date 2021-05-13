@@ -24,13 +24,23 @@ module.exports.getCourses = catchAsync(async (req, res, next) => {
 module.exports.createCourse = catchAsync(async (req, res, next) => {
     const { bootcampId } = req.params;
     req.body.bootcamp = bootcampId;
-    const bootcamp = await Bootcamp.findById(bootcampId);
-    if (!bootcamp) {
-        return next(new ExpressError(404, `Bootcamp not found with id of ${id}`));
+    req.body.user = req.user.id;
+    const foundBootcamp = await Bootcamp.findById(bootcampId);
+    if (!foundBootcamp) {
+        return next(new ExpressError(404, `Bootcamp not found with id of ${bootcampId}`));
+    }
+
+    // Make sure user is bootcamp owner and  also not an admin
+    if (foundBootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+        return next(
+            new ExpressError(
+                401,
+                `User ${req.user.id} not authorized to add a course to this bootcamp ${bootcampId}`
+            )
+        );
     }
     const course = new Course(req.body);
     const newCourse = await course.save();
-
     res.status(200).json({ success: true, data: newCourse });
 });
 
@@ -46,31 +56,51 @@ module.exports.getCourse = catchAsync(async (req, res, next) => {
     res.status(200).json({ success: true, data: course });
 });
 
-// @desc        Create Single course
+// @desc        Update Single course
 // @route       PUT /api/v1/courses/:id
 // @access    PRIVATE
 module.exports.updateCourse = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const updatedCourse = await Course.findByIdAndUpdate(id, req.body, {
-        new: true,
-        runValidators: true
-    });
+    const foundCourse = await Course.findById(id);
 
-    if (!updatedCourse) {
+    if (!foundCourse) {
         return next(new ExpressError(404, `Course not found with id of ${id}`));
     }
+    // Make sure user is bootcamp owner and  also not an admin
+    if (foundCourse.user.toString() !== req.user.id && req.user.role !== "admin") {
+        return next(
+            new ExpressError(
+                401,
+                `User ${req.user.id} not authorized to update a course to this bootcamp ${id}`
+            )
+        );
+    }
+    const updatedCourse = await Course.findByIdAndUpdate(id, req.body, {
+        runValidators: true,
+        new: true
+    });
     res.status(200).json({ success: true, data: updatedCourse });
 });
 
-// @desc        Deete SIngle course
+// @desc        Delete SIngle course
 // @route       POST /api/v1/courses/:id
 // @access    PRIVATE
 module.exports.deleteCourse = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const deletedCourse = await Course.findByIdAndDelete(id);
-    if (!deletedCourse) {
+    const foundCourse = await Course.findById(id);
+    if (!foundCourse) {
         return next(new ExpressError(404, `Course not found with id of ${id}`));
     }
+    // Make sure user is bootcamp owner and  also not an admin
+    if (foundCourse.user.toString() !== req.user.id && req.user.role !== "admin") {
+        return next(
+            new ExpressError(
+                401,
+                `User ${req.user.id} not authorized to delete a course to this bootcamp ${id}`
+            )
+        );
+    }
+    await Course.findByIdAndDelete(id);
     res.status(200).json({ success: true, data: {} });
 });
 
