@@ -21,7 +21,11 @@ module.exports.protectRoute = catchAsync(async (req, res, next) => {
     try {
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        req.user = await User.findById(decoded.id);
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return next(new ExpressError(401, "Not authorized to access this"));
+        }
+        req.user = user;
         next();
     } catch (err) {
         console.log(err);
