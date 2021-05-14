@@ -9,4 +9,5 @@ The API is live at [dev-campers](https://dev-campers.herokuapp.com/)
 
 ## Credits
 Instructor: [Brad Traversy](https://github.com/bradtraversy)
-Course: (Node.js API Masterclass With Express & MongoDB](https://www.udemy.com/course/nodejs-api-masterclass/) 
+
+Course: [Node.js API Masterclass With Express & MongoDB](https://www.udemy.com/course/nodejs-api-masterclass/) 
