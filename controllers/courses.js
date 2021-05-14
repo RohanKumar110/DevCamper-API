@@ -79,6 +79,7 @@ module.exports.updateCourse = catchAsync(async (req, res, next) => {
         runValidators: true,
         new: true
     });
+    updatedCourse.save();
     res.status(200).json({ success: true, data: updatedCourse });
 });
 

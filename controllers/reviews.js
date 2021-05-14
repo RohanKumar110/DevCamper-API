@@ -67,6 +67,7 @@ module.exports.updateReview = catchAsync(async (req, res, next) => {
         runValidators: true,
         new: true
     });
+    updatedReview.save();
     res.status(200).json({ success: true, data: updatedReview });
 });
 
