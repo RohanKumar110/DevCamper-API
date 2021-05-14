@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Route Files
 const bootcamps = require("./routes/bootcamps");
 const courses = require("./routes/courses");
+const reviews = require("./routes/reviews");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
 
@@ -39,6 +40,7 @@ app.use(fileupload());
 // Mount Routers
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
+app.use("/api/v1/reviews", reviews);
 app.use("/api/v1/users", users);
 app.use("/api/v1/auth", auth);
 

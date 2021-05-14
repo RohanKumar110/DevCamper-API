@@ -8,7 +8,6 @@ const ExpressError = require("../utils/ExpressError");
 // @route       GET /api/v1/bootcamps
 // @access    PUBLIC    
 module.exports.getBootcamps = catchAsync(async (req, res, next) => {
-
     res.status(200).json(res.advancedResults);
 });
 
