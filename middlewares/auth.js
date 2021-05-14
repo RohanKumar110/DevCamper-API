@@ -8,7 +8,11 @@ module.exports.protectRoute = catchAsync(async (req, res, next) => {
     let token;
     const { authorization } = req.headers;
     if (authorization && authorization.startsWith("Bearer")) {
+        // Set token from Bearer Token in header
         token = authorization.split(" ")[1];
+    } else if (req.cookies.token) {
+        // Set token from cookie
+        token = req.cookies.token;
     }
     // Make sure token exists
     if (!token) {

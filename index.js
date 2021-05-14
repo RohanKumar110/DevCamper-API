@@ -5,7 +5,13 @@ const morgan = require("morgan");
 const connectDB = require("./db");
 const errorHandler = require("./middlewares/error");
 const fileupload = require("express-fileupload");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const mongoSanitize = require('express-mongo-sanitize');
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const xss = require('xss-clean');
+const cors = require('cors');
+const hpp = require('hpp');
 const app = express();
 
 if (process.env.NODE_ENV !== "production") {
@@ -23,6 +29,30 @@ app.use(express.json());
 
 //Cookie parser
 app.use(cookieParser());
+
+// Sanitize data
+app.use(mongoSanitize());
+
+// Set Security headers
+app.use(helmet());
+
+// Rate Limiting
+const apiLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 100
+});
+
+app.use(apiLimiter);
+
+// Prevent http param pollution
+app.use(hpp());
+
+// Prevent Cross site scripting
+// Make sure this comes before any routes
+app.use(xss());
+
+// Enable cors
+app.use(cors());
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));

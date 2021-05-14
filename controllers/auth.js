@@ -40,6 +40,17 @@ module.exports.login = catchAsync(async (req, res, next) => {
     sendTokenResponse(res, 200, user);
 });
 
+// @desc        Log user out / clear cookie
+// @route       GET /api/v1/auth/logout
+// @access    PRIVATE
+module.exports.logout = catchAsync(async (req, res, next) => {
+    res.cookie("token", "none", {
+        expires: new Date(Date.now() + 10 * 10000),
+        httoOnly: true
+    });
+    res.status(200).json({ sucess: true, data: {} });
+});
+
 // @desc        Get current logged In User
 // @route       POST /api/v1/auth/me
 // @access    PRIVATE
@@ -132,7 +143,7 @@ module.exports.updatePassword = catchAsync(async (req, res, next) => {
     const isMatch = await user.matchPassword(currentPassword);
     if (!isMatch) {
         return next(new ExpressError(401, "Password Incorrect"));
-    } 
+    }
     user.password = newPassword;
     await user.save();
     sendTokenResponse(res, 200, user);

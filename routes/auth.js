@@ -7,6 +7,8 @@ router.post("/register", auth.register);
 
 router.post("/login", auth.login);
 
+router.get("/logout", protectRoute, auth.logout);
+
 router.get("/me", protectRoute, auth.getCurrentUser);
 
 router.get("/forgotpassword", auth.forgotPassword);
