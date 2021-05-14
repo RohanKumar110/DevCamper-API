@@ -16,7 +16,7 @@ module.exports.protectRoute = catchAsync(async (req, res, next) => {
     }
     // Make sure token exists
     if (!token) {
-        return next(new ExpressError(401, "Not authorize to access this"));
+        return next(new ExpressError(401, "Not authorized to access this"));
     }
     try {
         // Verify token
@@ -25,13 +25,20 @@ module.exports.protectRoute = catchAsync(async (req, res, next) => {
         next();
     } catch (err) {
         console.log(err);
-        return next(new ExpressError(401, "Not authorize to access this"));
+        return next(new ExpressError(401, "Not authorized to access this"));
     }
 });
 
 // Grant acess to specific role
 module.exports.authorize = (...roles) => {
     return (req, res, next) => {
+
+        if (!req.user) {
+            return next(
+                new ExpressError(401, `Not authorized to access this route`)
+            );
+        }
+
         if (!roles.includes(req.user.role)) {
             return next(
                 new ExpressError(403, `User role ${req.user.role} is not authorized to access this route`)

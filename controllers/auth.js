@@ -55,7 +55,7 @@ module.exports.logout = catchAsync(async (req, res, next) => {
 // @route       POST /api/v1/auth/me
 // @access    PRIVATE
 module.exports.getCurrentUser = catchAsync(async (req, res, next) => {
-    const user = await User.findById(req.user.id);
+    const user = req.user;
     res.status(200).json({ sucess: true, data: user });
 });
 

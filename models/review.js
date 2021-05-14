@@ -49,9 +49,15 @@ reviewSchema.statics.getAverageRating = async function (bootcampId) {
         }
     ]);
     try {
-        await Bootcamp.findByIdAndUpdate(bootcampId, {
-            averageRating: obj[0].averageRating
-        });
+        if (obj[0]) {
+            await Bootcamp.findByIdAndUpdate(bootcampId, {
+                averageRating: obj[0].averageRating
+            });
+        } else {
+            await Bootcamp.findByIdAndUpdate(bootcampId, {
+                averageRating: undefined
+            });
+        }
     } catch (err) {
         console.log(err);
     }
